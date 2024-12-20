@@ -1,0 +1,1028 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Overview and Summary of the Multi-Armed Bandit Problem and the Algorithms Demonstrated &#8212; Multiarm Bnadit Simulation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'BanditSimiulation';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/FUM_Logo.png" class="logo__image only-light" alt="Multiarm Bnadit Simulation - Home"/>
+    <script>document.write(`<img src="_static/FUM_Logo.png" class="logo__image only-dark" alt="Multiarm Bnadit Simulation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1 current active">
+                <a class="reference internal" href="#">
+                    Overview and Summary of the Multi-Armed Bandit Problem and the Algorithms Demonstrated
+                </a>
+            </li>
+        </ul>
+        
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2FBanditSimiulation.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/BanditSimiulation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Overview and Summary of the Multi-Armed Bandit Problem and the Algorithms Demonstrated</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Overview and Summary of the Multi-Armed Bandit Problem and the Algorithms Demonstrated</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-multi-armed-bandit-problem">The Multi-Armed Bandit Problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-formulation">Mathematical Formulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithms-demonstrated">Algorithms Demonstrated</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#greedy-algorithm">1. Greedy Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#epsilon-greedy-algorithm">2. Epsilon-Greedy Algorithm</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#observed-results-and-interpretation">Observed Results and Interpretation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#armed-bandit-problem-simulation">10-Armed Bandit Problem Simulation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-setting-up-the-environment">Part 1: Setting Up the Environment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-simulation-with-learning-agents">Part 2: Simulation with Learning Agents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#idea">Idea:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-experiments">Running the Experiments</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">Visualization</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-the-results">Interpreting the Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimal-action-percentage-plot">Optimal Action Percentage Plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#average-rewards-plot">Average Rewards Plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overall-lessons">Overall Lessons</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <br>
+<font face="Times New Roman" size="5">
+    <div dir="ltr" align="center">
+        <font color="black" size="6"><b>Ferdowsi University of Mashhad</b></font><br>
+        <font color="black" size="15"><b>Reinforcement Learning Course</b></font><br>
+        <font color="black" size="6"><b>10-Armed Bandit Problem Simulation</b></font><br>
+        <font color="black" size="5">
+            <b>Professor:</b> Prof. Mohammad-Bagher Naghibi-Sistani<br>
+            <b>Student Information:</b><br>
+            <b>Name</b>: Mustafa Sadeghi<br>
+            <b>Student ID</b>: 4027390423<br><br>
+        </font>
+        <font>
+        <font color="black" size="5"><i>Fall 2024</i></font><br><br>
+        </font>
+    </div>
+</font>
+<hr class="docutils" />
+<section class="tex2jax_ignore mathjax_ignore" id="overview-and-summary-of-the-multi-armed-bandit-problem-and-the-algorithms-demonstrated">
+<h1>Overview and Summary of the Multi-Armed Bandit Problem and the Algorithms Demonstrated<a class="headerlink" href="#overview-and-summary-of-the-multi-armed-bandit-problem-and-the-algorithms-demonstrated" title="Link to this heading">#</a></h1>
+<!-- <img src="Monte-Carlo-Casino3.jpg" alt="Sample Image" style="display: block; margin: 0 auto; width:50%;"> -->
+<p><img alt="Sample Image" src="_images/Monte-Carlo-Casino3.jpg" /></p>
+<section id="the-multi-armed-bandit-problem">
+<h2>The Multi-Armed Bandit Problem<a class="headerlink" href="#the-multi-armed-bandit-problem" title="Link to this heading">#</a></h2>
+<p>The multi-armed bandit problem is a classic scenario in reinforcement learning and decision-making under uncertainty. Imagine having several slot machines (each called a “bandit”) in front of you. Each machine, when played, yields a reward drawn from a probability distribution unique to that machine. The distributions are unknown to you. Your goal is to maximize your total reward by choosing which machine to play repeatedly over time.</p>
+<p>Key challenges:</p>
+<ul class="simple">
+<li><p><strong>Exploration vs. Exploitation:</strong><br />
+You need to explore different machines to gather information about their reward distributions. However, you also need to exploit the best machine found so far. Too little exploration may cause you to miss the truly optimal machine, while too much exploration wastes time playing suboptimal machines.</p></li>
+</ul>
+</section>
+<section id="mathematical-formulation">
+<h2>Mathematical Formulation<a class="headerlink" href="#mathematical-formulation" title="Link to this heading">#</a></h2>
+<ol class="arabic">
+<li><p><strong>Setting:</strong></p>
+<ul>
+<li><p>You have <span class="math notranslate nohighlight">\(k\)</span> bandits. In this example, <span class="math notranslate nohighlight">\(k = 10\)</span>.</p></li>
+<li><p>Each bandit <span class="math notranslate nohighlight">\(Q(i)\)</span> has an associated true mean reward <span class="math notranslate nohighlight">\(Q^*(i)\)</span>. In the code, these are drawn from a normal distribution:</p>
+<p><span class="math notranslate nohighlight">\(Q^*(i) \sim N(0,1)\)</span>.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Learning the Value Estimates:</strong></p>
+<p>Initially, the mean rewards <span class="math notranslate nohighlight">\(Q^*(i)\)</span> are unknown. We maintain an estimate <span class="math notranslate nohighlight">\(Q(i)\)</span> for each bandit. When an action (bandit) <span class="math notranslate nohighlight">\(a\)</span> is selected at time step <span class="math notranslate nohighlight">\(t\)</span>, it yields a reward <span class="math notranslate nohighlight">\(R(t)\)</span> drawn from <span class="math notranslate nohighlight">\(N(Q^*(a), 1)\)</span>.</p>
+<p>The estimate <span class="math notranslate nohighlight">\(Q(a)\)</span> is updated incrementally using:</p>
+<div class="math notranslate nohighlight">
+\[
+   Q(a) \leftarrow Q(a) + \frac{R(t) - Q(a)}{N(a)}
+   \]</div>
+<p>where <span class="math notranslate nohighlight">\(N(a)\)</span> is the number of times action <span class="math notranslate nohighlight">\(a\)</span> has been selected so far. This update rule ensures that <span class="math notranslate nohighlight">\(Q(a)\)</span> approaches the true mean <span class="math notranslate nohighlight">\(Q^*(a)\)</span> as more data is collected.</p>
+</li>
+</ol>
+<p><img alt="Sample Image" src="_images/bandit.png" /></p>
+<ol class="arabic simple" start="3">
+<li><p><strong>Optimal Action:</strong>
+The optimal action at any step is the one with the highest true mean <span class="math notranslate nohighlight">\(Q^*(i)\)</span>. Over time, a good strategy should converge to selecting that optimal action a large percentage of the time.</p></li>
+</ol>
+</section>
+<section id="algorithms-demonstrated">
+<h2>Algorithms Demonstrated<a class="headerlink" href="#algorithms-demonstrated" title="Link to this heading">#</a></h2>
+<section id="greedy-algorithm">
+<h3>1. Greedy Algorithm<a class="headerlink" href="#greedy-algorithm" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Description:</strong><br />
+Always select the bandit with the current highest estimated mean reward <span class="math notranslate nohighlight">\(Q(i)\)</span>.</p></li>
+<li><p><strong>Formula for Action Selection:</strong></p>
+<div class="math notranslate nohighlight">
+\[
+  A(t) = \arg\max_i Q(i)
+  \]</div>
+</li>
+<li><p><strong>Shortcoming:</strong><br />
+If the agent gets unlucky and initially estimates a suboptimal bandit to be the best (due to random chance), it never explores other options. As a result, it may fail to find the true optimal machine.</p></li>
+</ul>
+</section>
+<section id="epsilon-greedy-algorithm">
+<h3>2. Epsilon-Greedy Algorithm<a class="headerlink" href="#epsilon-greedy-algorithm" title="Link to this heading">#</a></h3>
+<ul>
+<li><p><strong>Description:</strong><br />
+With probability <span class="math notranslate nohighlight">\(\epsilon\)</span>, select a random bandit (exploration); with probability <span class="math notranslate nohighlight">\(1 - \epsilon\)</span>, select the best-estimated bandit (exploitation).</p></li>
+<li><p><strong>Formula for Action Selection:</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+  A(t) = 
+    \begin{cases}
+      \text{a random action with probability } \epsilon, \\
+      \arg\max_i Q(i) \text{ with probability } 1 - \epsilon.
+    \end{cases}
+  \end{split}\]</div>
+</li>
+<li><p><strong>Impact of Different <span class="math notranslate nohighlight">\(\epsilon\)</span> Values:</strong></p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\epsilon = 0.1\)</span>: More exploration. This ensures the agent frequently tries different bandits, rapidly discovering the best one. Typically leads to higher long-term reward and a higher probability of selecting the optimal action.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\epsilon = 0.01\)</span>: Less exploration. The agent still improves over purely greedy by occasionally exploring, but may converge slower and achieve a lower optimal action percentage compared to higher exploration.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="observed-results-and-interpretation">
+<h2>Observed Results and Interpretation<a class="headerlink" href="#observed-results-and-interpretation" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>No Exploration (Greedy):</strong><br />
+The agent quickly settles on a potentially suboptimal bandit, resulting in lower long-term average rewards and fewer optimal selections.</p></li>
+<li><p><strong>Some Exploration (Epsilon-Greedy):</strong><br />
+Introducing even a small amount of exploration (<span class="math notranslate nohighlight">\(\epsilon=0.01\)</span>) helps the agent discover better bandits over time, boosting performance above greedy.</p></li>
+<li><p><strong>More Exploration (<span class="math notranslate nohighlight">\(\epsilon=0.1\)</span>):</strong><br />
+Encourages broader search, which often leads to identifying the truly optimal bandit. This approach yields the highest average reward and the largest percentage of optimal actions in the long run.</p></li>
+</ul>
+</section>
+<section id="takeaways">
+<h2>Takeaways<a class="headerlink" href="#takeaways" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Exploration is Crucial:</strong><br />
+Pure exploitation can get stuck in suboptimal policies. A balanced exploration strategy ensures the agent gathers enough information to identify the best bandit.</p></li>
+<li><p><strong>Choosing <span class="math notranslate nohighlight">\(\epsilon\)</span>:</strong><br />
+The value of <span class="math notranslate nohighlight">\(\epsilon\)</span> affects the trade-off between exploration and exploitation. A higher <span class="math notranslate nohighlight">\(\epsilon\)</span> increases the chance of finding the optimal bandit but also includes more “wasted” plays on poor bandits. A well-chosen <span class="math notranslate nohighlight">\(\epsilon\)</span> leads to better overall performance.</p></li>
+<li><p><strong>Incremental Value Update:</strong><br />
+The incremental update formula allows the agent to efficiently maintain running estimates of each bandit’s mean without storing all past rewards.</p></li>
+</ol>
+<p>In summary, the multi-armed bandit problem exemplifies a fundamental exploration-exploitation dilemma. The algorithms and formulas used in the code demonstrate how introducing even a small probability of random exploration can significantly improve an agent’s long-term performance compared to a purely greedy strategy.</p>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="armed-bandit-problem-simulation">
+<h1>10-Armed Bandit Problem Simulation<a class="headerlink" href="#armed-bandit-problem-simulation" title="Link to this heading">#</a></h1>
+<!-- <img src="normal_distrbution.png" alt="Sample Image" style="display: block; margin: 0 auto; width:70%;"> -->
+<p><img alt="Sample Image" src="_images/normal_distrbution.png" /></p>
+<p>In this simulation, we will explore the 10-armed bandit problem, a classic scenario in reinforcement learning. We have 10 slot machines (bandits), each with an unknown probability distribution of rewards. The goal is to identify the machine that yields the highest average reward and learn to maximize the total reward over multiple trials.</p>
+<p>The process is as follows:</p>
+<ol class="arabic simple">
+<li><p><strong>Part 1: Setting Up the Environment</strong></p>
+<ul class="simple">
+<li><p>Generate the true reward means (<code class="docutils literal notranslate"><span class="pre">Q*</span></code>) for 10 bandits.</p></li>
+<li><p>Generate 1000 rewards for each of these 10 bandits from normal distributions with the respective means and a standard deviation of 1.</p></li>
+<li><p>Compute the empirical means (<code class="docutils literal notranslate"><span class="pre">Qtemp</span></code>) of these generated rewards.</p></li>
+<li><p>Visualize the difference between <code class="docutils literal notranslate"><span class="pre">Q*</span></code> and <code class="docutils literal notranslate"><span class="pre">Qtemp</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Part 2: Simulation with Learning Agents</strong></p>
+<ul class="simple">
+<li><p>We introduce three agents:</p>
+<ul>
+<li><p><strong>Greedy Agent:</strong> Always exploits the current best estimate.</p></li>
+<li><p><strong>Epsilon-Greedy Agent (E = 0.1):</strong> Explores (picks randomly) with probability 0.1, otherwise exploits.</p></li>
+<li><p><strong>Epsilon-Greedy Agent (E = 0.01):</strong> Explores with probability 0.01, otherwise exploits.</p></li>
+</ul>
+</li>
+<li><p>We run 2000 experiments, each with a fresh environment. Each experiment lasts for 1000 steps.</p></li>
+<li><p>We record the average reward and the percentage of selecting the optimal machine across time for each agent.</p></li>
+<li><p>Finally, we visualize the results to compare these agents’ performance.</p></li>
+</ul>
+</li>
+</ol>
+<section id="part-1-setting-up-the-environment">
+<h2>Part 1: Setting Up the Environment<a class="headerlink" href="#part-1-setting-up-the-environment" title="Link to this heading">#</a></h2>
+<p>In this part, we:</p>
+<ul class="simple">
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">Qstar</span></code>: a vector of length 10, with each element drawn from a normal distribution N(0,1).</p></li>
+<li><p>For each bandit, generate 1000 rewards from N(Qstar[i],1).</p></li>
+<li><p>Compute <code class="docutils literal notranslate"><span class="pre">Qtemp</span></code>: the sample mean of these generated rewards.</p></li>
+<li><p>Plot the difference between <code class="docutils literal notranslate"><span class="pre">Qstar</span></code> and <code class="docutils literal notranslate"><span class="pre">Qtemp</span></code>.</p></li>
+</ul>
+<p><strong>Theoretical Note:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Qstar</span></code> represents the true (but unknown) mean reward for each bandit.</p></li>
+<li><p>Given 1000 samples for each bandit, <code class="docutils literal notranslate"><span class="pre">Qtemp</span></code> should be close to <code class="docutils literal notranslate"><span class="pre">Qstar</span></code>, as the sample mean approximates the true mean when sample size is large.</p></li>
+<li><p>Plotting <code class="docutils literal notranslate"><span class="pre">Qstar</span> <span class="pre">-</span> <span class="pre">Qtemp</span></code> helps us see how well our finite sample means approximate the true values.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>  
+
+<span class="c1"># Step 1: Generate Qstar</span>
+<span class="n">Qstar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Step 2: Generate the rewards A (10x1000)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">Qstar</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># Step 3: Compute Qtemp</span>
+<span class="n">Qtemp</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Step 4: Plot the difference Qstar - Qtemp</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Qstar</span> <span class="o">-</span> <span class="n">Qtemp</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Difference between Q* and Qtemp&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Bandit Index&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Q* - Qtemp&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/340d8203f01a8c1b59e0a031c5973428390615d3110ff13bd82afe42a003f49e.png" src="_images/340d8203f01a8c1b59e0a031c5973428390615d3110ff13bd82afe42a003f49e.png" />
+</div>
+</div>
+<p><strong>Interpretation of the Plot:</strong></p>
+<ul class="simple">
+<li><p>The plotted differences should hover around zero, because with 1000 samples per bandit, <code class="docutils literal notranslate"><span class="pre">Qtemp</span></code> is likely close to <code class="docutils literal notranslate"><span class="pre">Qstar</span></code>.</p></li>
+<li><p>Small deviations occur due to the randomness in sampling.</p></li>
+</ul>
+<p>As expected, since each bandit’s rewards are generated from N(Qstar[i],1), the law of large numbers suggests <code class="docutils literal notranslate"><span class="pre">Qtemp[i]</span> <span class="pre">≈</span> <span class="pre">Qstar[i]</span></code>.</p>
+</section>
+<section id="part-2-simulation-with-learning-agents">
+<h2>Part 2: Simulation with Learning Agents<a class="headerlink" href="#part-2-simulation-with-learning-agents" title="Link to this heading">#</a></h2>
+<section id="idea">
+<h3>Idea:<a class="headerlink" href="#idea" title="Link to this heading">#</a></h3>
+<p>We will simulate the interaction of different agents with the 10-armed bandit environment:</p>
+<ol class="arabic simple">
+<li><p><strong>Environment Reset Per Experiment:</strong>
+Each experiment creates a new set of 10 bandits with their own <code class="docutils literal notranslate"><span class="pre">Qstar</span></code> and rewards matrix <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p></li>
+<li><p><strong>Agents:</strong></p>
+<ul class="simple">
+<li><p><strong>Greedy Agent:</strong> Chooses the bandit with the current highest estimated value.</p>
+<ul>
+<li><p>Problem: May get stuck with a suboptimal choice if it happens to sample poorly at the start.</p></li>
+</ul>
+</li>
+<li><p><strong>Epsilon-Greedy (E=0.1):</strong> 90% exploit the best-known bandit, 10% pick randomly.</p>
+<ul>
+<li><p>More exploration helps find the optimal bandit, improving long-term performance.</p></li>
+</ul>
+</li>
+<li><p><strong>Epsilon-Greedy (E=0.01):</strong> 99% exploit, 1% explore.</p>
+<ul>
+<li><p>Less exploration, but still better than never exploring.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Experiment Details:</strong></p>
+<ul class="simple">
+<li><p>We run 2000 independent experiments. Each experiment:</p>
+<ul>
+<li><p>Creates a new environment with fresh <code class="docutils literal notranslate"><span class="pre">Qstar</span></code> and <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p></li>
+<li><p>Runs the agent for 1000 steps.</p></li>
+</ul>
+</li>
+<li><p>We record two metrics:</p>
+<ul>
+<li><p><strong>Average Reward:</strong> The mean reward at each step across all experiments.</p></li>
+<li><p><strong>Optimal Action %:</strong> The percentage of times the agent picks the optimal bandit.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><strong>Theoretical Expectation:</strong></p>
+<ul class="simple">
+<li><p>The greedy agent might learn slowly or get stuck, resulting in lower long-term optimal selection.</p></li>
+<li><p>The epsilon-greedy agents, especially with E=0.1, should do better at finding the best bandit, leading to higher average rewards and more frequent optimal action selection over time.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_environment</span><span class="p">():</span>
+    <span class="n">Qstar_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">A_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">A_new</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="n">Qstar_new</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Qstar_new</span><span class="p">,</span> <span class="n">A_new</span>
+
+<span class="k">def</span> <span class="nf">run_experiment</span><span class="p">(</span><span class="n">Qstar_env</span><span class="p">,</span> <span class="n">A_env</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="c1"># Initialize estimates and counts</span>
+    <span class="n">Q_est</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="n">rewards</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span>
+    <span class="n">optimal_selection</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">optimal_bandit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">Qstar_env</span><span class="p">)</span> <span class="c1"># Agent doesn&#39;t no anything about this</span>
+
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
+        <span class="c1"># Epsilon-greedy action selection</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">epsilon</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">Q_est</span><span class="p">)</span>
+
+        <span class="c1"># Check if chosen action is optimal</span>
+        <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="n">optimal_bandit</span><span class="p">:</span>
+            <span class="n">optimal_selection</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># Get reward and update estimates</span>
+        <span class="n">reward</span> <span class="o">=</span> <span class="n">A_env</span><span class="p">[</span><span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">]</span>
+        <span class="n">rewards</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">reward</span>
+
+        <span class="n">N</span><span class="p">[</span><span class="n">action</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">Q_est</span><span class="p">[</span><span class="n">action</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">reward</span> <span class="o">-</span> <span class="n">Q_est</span><span class="p">[</span><span class="n">action</span><span class="p">])</span> <span class="o">/</span> <span class="n">N</span><span class="p">[</span><span class="n">action</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">optimal_selection</span>
+
+<span class="c1"># Wrapper functions for each agent type</span>
+<span class="k">def</span> <span class="nf">run_greedy</span><span class="p">(</span><span class="n">Qstar_env</span><span class="p">,</span> <span class="n">A_env</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">Qstar_env</span><span class="p">,</span> <span class="n">A_env</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">run_eps_greedy_0_1</span><span class="p">(</span><span class="n">Qstar_env</span><span class="p">,</span> <span class="n">A_env</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">Qstar_env</span><span class="p">,</span> <span class="n">A_env</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">run_eps_greedy_0_01</span><span class="p">(</span><span class="n">Qstar_env</span><span class="p">,</span> <span class="n">A_env</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">run_experiment</span><span class="p">(</span><span class="n">Qstar_env</span><span class="p">,</span> <span class="n">A_env</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="running-the-experiments">
+<h3>Running the Experiments<a class="headerlink" href="#running-the-experiments" title="Link to this heading">#</a></h3>
+<p>We will:</p>
+<ul class="simple">
+<li><p>Run 2000 experiments for each agent type.</p></li>
+<li><p>Each experiment:</p>
+<ul>
+<li><p>Creates a new <code class="docutils literal notranslate"><span class="pre">Qstar</span></code> and <code class="docutils literal notranslate"><span class="pre">A</span></code>.</p></li>
+<li><p>Runs the agent for 1000 steps.</p></li>
+</ul>
+</li>
+<li><p>Store the rewards and optimal action selections from all experiments.</p></li>
+</ul>
+<p><strong>Expected Outcome:</strong></p>
+<ul class="simple">
+<li><p>After aggregation, we’ll see how each agent performs on average.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_experiments</span> <span class="o">=</span> <span class="mi">2000</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="c1"># Storage arrays</span>
+<span class="n">greedy_rewards_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_experiments</span><span class="p">,</span> <span class="n">steps</span><span class="p">))</span>
+<span class="n">greedy_optimal_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_experiments</span><span class="p">,</span> <span class="n">steps</span><span class="p">))</span>
+
+<span class="n">eps01_rewards_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_experiments</span><span class="p">,</span> <span class="n">steps</span><span class="p">))</span>
+<span class="n">eps01_optimal_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_experiments</span><span class="p">,</span> <span class="n">steps</span><span class="p">))</span>
+
+<span class="n">eps001_rewards_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_experiments</span><span class="p">,</span> <span class="n">steps</span><span class="p">))</span>
+<span class="n">eps001_optimal_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num_experiments</span><span class="p">,</span> <span class="n">steps</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_experiments</span><span class="p">):</span>
+    <span class="n">Qs</span><span class="p">,</span> <span class="n">A_env</span> <span class="o">=</span> <span class="n">create_environment</span><span class="p">()</span>
+    <span class="c1"># Greedy</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">o</span> <span class="o">=</span> <span class="n">run_greedy</span><span class="p">(</span><span class="n">Qs</span><span class="p">,</span> <span class="n">A_env</span><span class="p">)</span>
+    <span class="n">greedy_rewards_all</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="n">greedy_optimal_all</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">o</span>
+
+    <span class="c1"># Eps=0.1</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">o</span> <span class="o">=</span> <span class="n">run_eps_greedy_0_1</span><span class="p">(</span><span class="n">Qs</span><span class="p">,</span> <span class="n">A_env</span><span class="p">)</span>
+    <span class="n">eps01_rewards_all</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="n">eps01_optimal_all</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">o</span>
+
+    <span class="c1"># Eps=0.01</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">o</span> <span class="o">=</span> <span class="n">run_eps_greedy_0_01</span><span class="p">(</span><span class="n">Qs</span><span class="p">,</span> <span class="n">A_env</span><span class="p">)</span>
+    <span class="n">eps001_rewards_all</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="n">eps001_optimal_all</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">o</span>
+
+<span class="c1"># Compute average metrics across all experiments</span>
+<span class="n">greedy_mean_rewards</span> <span class="o">=</span> <span class="n">greedy_rewards_all</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">greedy_optimal_rate</span> <span class="o">=</span> <span class="n">greedy_optimal_all</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100.0</span>
+
+<span class="n">eps01_mean_rewards</span> <span class="o">=</span> <span class="n">eps01_rewards_all</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">eps01_optimal_rate</span> <span class="o">=</span> <span class="n">eps01_optimal_all</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100.0</span>
+
+<span class="n">eps001_mean_rewards</span> <span class="o">=</span> <span class="n">eps001_rewards_all</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">eps001_optimal_rate</span> <span class="o">=</span> <span class="n">eps001_optimal_all</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100.0</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualization">
+<h3>Visualization<a class="headerlink" href="#visualization" title="Link to this heading">#</a></h3>
+<p>We now plot:</p>
+<ol class="arabic simple">
+<li><p>The average reward over the 1000 steps for each agent.</p></li>
+<li><p>The percentage of times each agent selected the optimal bandit.</p></li>
+</ol>
+<p><strong>Interpretation:</strong></p>
+<ul class="simple">
+<li><p>Higher average reward: The agent is performing better.</p></li>
+<li><p>Higher optimal action %: The agent more frequently identifies and selects the best bandit.</p></li>
+</ul>
+<p>We anticipate:</p>
+<ul class="simple">
+<li><p>The greedy agent may settle too early, resulting in lower long-term performance.</p></li>
+<li><p>The epsilon-greedy agents, especially E=0.1, will improve over time and likely achieve better long-term performance.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot average rewards</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">greedy_mean_rewards</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Greedy&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">eps01_mean_rewards</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Eps=0.1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">eps001_mean_rewards</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Eps=0.01&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Average Rewards (2000 Experiments)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Step&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Average Reward&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Plot optimal action percentage</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">greedy_optimal_rate</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Greedy&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">eps01_optimal_rate</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Eps=0.1&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">eps001_optimal_rate</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Eps=0.01&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Optimal Action % (2000 Experiments)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Step&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Optimal Action (%)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/c908c955a870372a15c5e4de8f4eca57fda0d40bbd4cb72a74ed47a40aaa26dc.png" src="_images/c908c955a870372a15c5e4de8f4eca57fda0d40bbd4cb72a74ed47a40aaa26dc.png" />
+<img alt="_images/e6978b19cb7acb0d7bfca3c8696486f3374ad3b79ca68be3244afcd0d7f6e2aa.png" src="_images/e6978b19cb7acb0d7bfca3c8696486f3374ad3b79ca68be3244afcd0d7f6e2aa.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="interpreting-the-results">
+<h2>Interpreting the Results<a class="headerlink" href="#interpreting-the-results" title="Link to this heading">#</a></h2>
+<p>From the generated plots, we see the behavior of the three agents across 2000 experiments and 1000 steps per experiment:</p>
+<section id="optimal-action-percentage-plot">
+<h3>Optimal Action Percentage Plot<a class="headerlink" href="#optimal-action-percentage-plot" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Greedy Agent (Blue Line):</strong><br />
+The greedy agent consistently hovers around selecting the optimal action roughly 35% of the time. Without exploration, if the greedy agent initially gets a misleadingly high reward from a suboptimal bandit, it will stick to that choice indefinitely. As a result, it fails to improve its action selection in the long run.</p></li>
+<li><p><strong>Epsilon-Greedy (E=0.1, Orange Line):</strong><br />
+This agent starts off with a lower optimal action rate, but improves significantly as steps progress. By exploring 10% of the time, it gathers enough information to correctly identify and exploit the optimal bandit. Over time, it stabilizes at selecting the optimal action around 80% of the time, far outpacing the greedy agent.</p></li>
+<li><p><strong>Epsilon-Greedy (E=0.01, Green Line):</strong><br />
+This agent lies between the other two. It explores, but less frequently (1% of the time). Consequently, it improves over the greedy agent by steadily increasing its optimal selection rate, but not as dramatically or as quickly as the E=0.1 agent. Over 1000 steps, it reaches around 60% optimal action selection, demonstrating that some exploration is better than none, but not as effective as more frequent exploration in this scenario.</p></li>
+</ul>
+</section>
+<section id="average-rewards-plot">
+<h3>Average Rewards Plot<a class="headerlink" href="#average-rewards-plot" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Greedy Agent (Blue Line):</strong><br />
+The greedy agent’s average reward increases initially but quickly plateaus at around 1.0 on average. Without exploration, it doesn’t find the truly optimal bandit if its early guesses are poor.</p></li>
+<li><p><strong>Epsilon-Greedy (E=0.1, Orange Line):</strong><br />
+With more exploration, the E=0.1 agent finds the best bandit more often. Over time, it achieves the highest average rewards, stabilizing around 1.4. The consistent exploration ensures it doesn’t get stuck on suboptimal choices.</p></li>
+<li><p><strong>Epsilon-Greedy (E=0.01, Green Line):</strong><br />
+This agent also outperforms the greedy agent, stabilizing at about 1.2. With less frequent exploration than the E=0.1 agent, it takes longer to find the optimal bandit and does not perform as well in the long run. Still, it proves better than never exploring at all.</p></li>
+</ul>
+</section>
+<section id="overall-lessons">
+<h3>Overall Lessons<a class="headerlink" href="#overall-lessons" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>No Exploration (Greedy):</strong><br />
+Leads to suboptimal long-term performance. The agent gets stuck due to limited initial information.</p></li>
+<li><p><strong>Some Exploration (E=0.01):</strong><br />
+Improves results, but the agent still struggles to quickly and consistently find the best bandit due to insufficient exploration.</p></li>
+<li><p><strong>More Exploration (E=0.1):</strong><br />
+Balances exploration and exploitation effectively, enabling the agent to identify and select the optimal bandit frequently, thus achieving higher rewards and better long-term outcomes.</p></li>
+</ul>
+<p>In essence, carefully chosen exploration rates help the agent reliably converge to near-optimal decisions and maximize cumulative reward. The 0.1 epsilon rate performs best in this setup, demonstrating the value of a greater commitment to exploration.</p>
+</section>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Reinforcement Learning Course</strong><br />
+Offered at Ferdowsi University of Mashhad by <a class="reference external" href="https://g.co/kgs/sKNdmsZ">Prof. Mohammad-Bagher Naghibi-Sistani</a>.</p></li>
+<li><p><strong>Multi-Armed Bandit Problem and Epsilon-Greedy Action-Value Method in Python</strong><br />
+<a class="reference external" href="https://youtu.be/ElgM5s28oVc?si=8W3GcNVvNau0wcvn">YouTube Video</a></p></li>
+<li><p><strong>Artificial Intelligence: Reinforcement Learning in Python</strong><br />
+<a class="reference external" href="https://www.udemy.com/share/1013km3&#64;QNKX-neNLmdbeFl2aU1-dAZlAUP4dU3Ml8_6YcyWlyvo5OwEotgk7yrflcN-Ypgkxg==/">Udemy Course</a></p></li>
+<li><p><strong>Reinforcement Learning Course</strong><br />
+<a class="reference external" href="https://hamrah.academy/course/3220">Hamrah Academy</a></p></li>
+<li><p><strong>Reinforcement Learning Specialization</strong><br />
+<a class="reference external" href="https://www.coursera.org/specializations/reinforcement-learning">Coursera Course by the University of Alberta</a></p></li>
+</ol>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Overview and Summary of the Multi-Armed Bandit Problem and the Algorithms Demonstrated</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-multi-armed-bandit-problem">The Multi-Armed Bandit Problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mathematical-formulation">Mathematical Formulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithms-demonstrated">Algorithms Demonstrated</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#greedy-algorithm">1. Greedy Algorithm</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#epsilon-greedy-algorithm">2. Epsilon-Greedy Algorithm</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#observed-results-and-interpretation">Observed Results and Interpretation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#takeaways">Takeaways</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#armed-bandit-problem-simulation">10-Armed Bandit Problem Simulation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-1-setting-up-the-environment">Part 1: Setting Up the Environment</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-simulation-with-learning-agents">Part 2: Simulation with Learning Agents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#idea">Idea:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-experiments">Running the Experiments</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">Visualization</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpreting-the-results">Interpreting the Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimal-action-percentage-plot">Optimal Action Percentage Plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#average-rewards-plot">Average Rewards Plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overall-lessons">Overall Lessons</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Mustafa Sadeghi
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
